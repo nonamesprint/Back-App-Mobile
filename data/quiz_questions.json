@@ -1,0 +1,138 @@
+
+{
+  "version": "1.0",
+  "date": "2024-06-29",
+  "total_questions": 10,
+  "questions": [
+    {
+      "id": 1,
+      "question": "Quelle est la plus grande fleur du monde ?",
+      "niveau": "facile",
+      "points": 10,
+      "temps_estime": 30,
+      "options": [
+        { "texte": "Rafflesia arnoldii", "est_correcte": true, "ordre": 1 },
+        { "texte": "Tulipe", "est_correcte": false, "ordre": 2 },
+        { "texte": "Rose", "est_correcte": false, "ordre": 3 },
+        { "texte": "Orchidée", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Quel arbre peut vivre plus de 1000 ans ?",
+      "niveau": "facile",
+      "points": 10,
+      "temps_estime": 30,
+      "options": [
+        { "texte": "Baobab", "est_correcte": true, "ordre": 1 },
+        { "texte": "Acacia", "est_correcte": false, "ordre": 2 },
+        { "texte": "Palmier", "est_correcte": false, "ordre": 3 },
+        { "texte": "Eucalyptus", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Quelle plante est connue pour ses propriétés médicinales ?",
+      "niveau": "facile",
+      "points": 10,
+      "temps_estime": 30,
+      "options": [
+        { "texte": "Aloe vera", "est_correcte": true, "ordre": 1 },
+        { "texte": "Cactus", "est_correcte": false, "ordre": 2 },
+        { "texte": "Fougère", "est_correcte": false, "ordre": 3 },
+        { "texte": "Mousse", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Quelle est la famille botanique du baobab ?",
+      "niveau": "moyen",
+      "points": 20,
+      "temps_estime": 45,
+      "options": [
+        { "texte": "Malvaceae", "est_correcte": true, "ordre": 1 },
+        { "texte": "Fabaceae", "est_correcte": false, "ordre": 2 },
+        { "texte": "Rosaceae", "est_correcte": false, "ordre": 3 },
+        { "texte": "Poaceae", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Où pousse naturellement la Rafflesia arnoldii ?",
+      "niveau": "moyen",
+      "points": 20,
+      "temps_estime": 45,
+      "options": [
+        { "texte": "Indonésie", "est_correcte": true, "ordre": 1 },
+        { "texte": "Brésil", "est_correcte": false, "ordre": 2 },
+        { "texte": "Afrique du Sud", "est_correcte": false, "ordre": 3 },
+        { "texte": "Australie", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Quelle plante est surnommée 'l'arbre de vie' ?",
+      "niveau": "difficile",
+      "points": 30,
+      "temps_estime": 60,
+      "options": [
+        { "texte": "Baobab", "est_correcte": true, "ordre": 1 },
+        { "texte": "Acacia", "est_correcte": false, "ordre": 2 },
+        { "texte": "Moringa", "est_correcte": false, "ordre": 3 },
+        { "texte": "Teck", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Quelle est la particularité du Welwitschia mirabilis ?",
+      "niveau": "moyen",
+      "points": 20,
+      "temps_estime": 45,
+      "options": [
+        { "texte": "Il ne produit que deux feuilles", "est_correcte": true, "ordre": 1 },
+        { "texte": "Il fleurit une fois par siècle", "est_correcte": false, "ordre": 2 },
+        { "texte": "Il vit dans l'eau", "est_correcte": false, "ordre": 3 },
+        { "texte": "Il est carnivore", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Quelle plante est utilisée pour fabriquer le thé ?",
+      "niveau": "facile",
+      "points": 10,
+      "temps_estime": 30,
+      "options": [
+        { "texte": "Camellia sinensis", "est_correcte": true, "ordre": 1 },
+        { "texte": "Menthe", "est_correcte": false, "ordre": 2 },
+        { "texte": "Romarin", "est_correcte": false, "ordre": 3 },
+        { "texte": "Thym", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Quel est le plus grand arbre du monde ?",
+      "niveau": "moyen",
+      "points": 20,
+      "temps_estime": 45,
+      "options": [
+        { "texte": "Séquoia géant", "est_correcte": true, "ordre": 1 },
+        { "texte": "Baobab", "est_correcte": false, "ordre": 2 },
+        { "texte": "Cèdre", "est_correcte": false, "ordre": 3 },
+        { "texte": "Pin", "est_correcte": false, "ordre": 4 }
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Quelle plante est toxique pour les animaux domestiques ?",
+      "niveau": "difficile",
+      "points": 30,
+      "temps_estime": 60,
+      "options": [
+        { "texte": "Laurier rose", "est_correcte": true, "ordre": 1 },
+        { "texte": "Basilic", "est_correcte": false, "ordre": 2 },
+        { "texte": "Menthe", "est_correcte": false, "ordre": 3 },
+        { "texte": "Romarin", "est_correcte": false, "ordre": 4 }
+      ]
+    }
+  ]
+}

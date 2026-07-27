@@ -1,0 +1,21 @@
+Bonjour {{ reservation.nom }},
+
+❌ Votre réservation au Jardin Botanique a été annulée.
+
+📋 Détails de la réservation annulée :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Référence : {{ reservation.reference }}
+📅 Date : {{ reservation.date_visite|date:"d/m/Y" }}
+⏰ Horaire : {{ reservation.duree_estimee|default:reservation.heure_visite|time:"H:i" }}
+🏷️ Type de visite : {{ reservation.get_type_visite_display }}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si vous souhaitez effectuer une nouvelle réservation, vous pouvez le faire à tout moment sur notre application.
+
+📞 Contact : +243 123 456 789
+📧 Email : contact@jardinbotanique.cd
+
+En espérant vous revoir bientôt au Jardin Botanique ! 🌿
+
+--
+L'équipe du Jardin Botanique

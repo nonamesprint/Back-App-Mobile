@@ -1,0 +1,709 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}📊 Statistiques{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">Accueil</a>
+    &rsaquo; Statistiques
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* =====================================================
+       JARDIN BOTANIQUE — TABLEAU DE BORD PREMIUM
+       Palette : noir verdière profond + laiton/or antique
+       Typo : Fraunces (display) + Inter (texte / data)
+       ===================================================== */
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+        --bg-deep: #0a0f0c;
+        --bg-deep-2: #0e1410;
+        --panel: #131a15;
+        --panel-2: #0f1512;
+        --hairline: rgba(201, 162, 39, 0.16);
+        --hairline-soft: rgba(201, 162, 39, 0.09);
+        --gold: #c9a227;
+        --gold-light: #e3c468;
+        --sage: #7c9885;
+        --sage-light: #a3c2ad;
+        --ivory: #ece6d6;
+        --ivory-dim: #b9b4a4;
+        --muted: #82897f;
+        --rust: #c06c4d;
+        --rust-light: #e0a589;
+        --teal: #5b8c95;
+        --teal-light: #9ccbd4;
+    }
+
+    /* Neutralise le fond blanc imposé par l'admin Django autour du bloc */
+    #content, .content, #content-main, body {
+        background: var(--bg-deep) !important;
+    }
+
+    .breadcrumbs {
+        background: var(--bg-deep-2) !important;
+        border-bottom: 1px solid var(--hairline) !important;
+        color: var(--ivory-dim) !important;
+    }
+    .breadcrumbs a { color: var(--gold-light) !important; }
+
+    /* ===== CONTENEUR GÉNÉRAL ===== */
+    .stats-container {
+        padding: 28px 24px 32px;
+        margin: -20px -20px 0;
+        background:
+            radial-gradient(ellipse 900px 420px at 12% -10%, rgba(201, 162, 39, 0.07), transparent 60%),
+            radial-gradient(ellipse 700px 380px at 100% 0%, rgba(124, 152, 133, 0.06), transparent 55%),
+            var(--bg-deep);
+        font-family: 'Inter', sans-serif;
+        color: var(--ivory);
+    }
+
+    .stats-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--hairline);
+    }
+
+    .stats-header h1 {
+        margin: 0;
+        font-family: 'Fraunces', serif;
+        font-size: 26px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--ivory);
+    }
+
+    .stats-header .subtitle {
+        color: var(--gold-light);
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+    }
+
+    /* ===== BOUTONS D'EXPORTATION ===== */
+    .export-section {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .export-section .export-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-right: 4px;
+    }
+
+    .export-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 16px;
+        border-radius: 3px;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border: 1px solid var(--hairline);
+        background: var(--panel);
+        color: var(--ivory-dim);
+        transition: all 0.25s ease;
+    }
+
+    .export-btn:hover {
+        background: var(--panel-2);
+        border-color: rgba(201, 162, 39, 0.4);
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .export-btn.excel {
+        border-color: rgba(46, 125, 50, 0.4);
+        color: #81C784;
+    }
+    .export-btn.excel:hover {
+        border-color: #4CAF50;
+        background: rgba(46, 125, 50, 0.08);
+        color: #A5D6A7;
+    }
+
+    .export-btn.csv {
+        border-color: rgba(91, 140, 149, 0.4);
+        color: var(--teal-light);
+    }
+    .export-btn.csv:hover {
+        border-color: #5b8c95;
+        background: rgba(91, 140, 149, 0.08);
+        color: #9ccbd4;
+    }
+
+    .export-btn.pdf {
+        border-color: rgba(192, 108, 77, 0.4);
+        color: var(--rust-light);
+    }
+    .export-btn.pdf:hover {
+        border-color: #c06c4d;
+        background: rgba(192, 108, 77, 0.08);
+        color: #e0a589;
+    }
+
+    /* ===== CARTES STATISTIQUES — PLAQUES DE SPÉCIMEN ===== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    .stats-card {
+        position: relative;
+        background: linear-gradient(165deg, var(--panel) 0%, var(--panel-2) 100%);
+        border-radius: 3px;
+        padding: 20px 14px 16px;
+        text-align: center;
+        border: 1px solid var(--hairline);
+        overflow: hidden;
+        transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .stats-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        opacity: 0.7;
+    }
+
+    .stats-card:hover {
+        border-color: rgba(201, 162, 39, 0.45);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    .stats-card .icon {
+        font-size: 17px;
+        display: block;
+        margin-bottom: 8px;
+        filter: grayscale(0.15) drop-shadow(0 0 6px rgba(201, 162, 39, 0.25));
+    }
+
+    .stats-card .number {
+        font-family: 'Fraunces', serif;
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 1.15;
+        background: linear-gradient(180deg, var(--gold-light), var(--gold));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stats-card .label {
+        font-size: 10.5px;
+        color: var(--ivory-dim);
+        margin-top: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    /* ===== PANNEAUX ===== */
+    .stats-panel {
+        background: linear-gradient(165deg, var(--panel) 0%, var(--panel-2) 100%);
+        border-radius: 3px;
+        padding: 20px 22px;
+        border: 1px solid var(--hairline);
+        margin-bottom: 0;
+    }
+
+    .stats-panel h3 {
+        margin: 0 0 16px 0;
+        color: var(--ivory);
+        font-family: 'Fraunces', serif;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        border-bottom: 1px solid var(--hairline);
+        padding-bottom: 12px;
+    }
+
+    .stats-panel h3 .panel-icon {
+        margin-right: 7px;
+        filter: drop-shadow(0 0 5px rgba(201, 162, 39, 0.3));
+    }
+
+    /* ===== LIGNES ===== */
+    .stats-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .stats-three-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    /* ===== LIGNES DE STATISTIQUES ===== */
+    .stat-row-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--hairline-soft);
+    }
+
+    .stat-row-item:last-child {
+        border-bottom: none;
+    }
+
+    .stat-row-item .stat-label {
+        color: var(--ivory-dim);
+        font-size: 12.5px;
+    }
+
+    .stat-row-item .stat-value {
+        font-weight: 600;
+        color: var(--ivory);
+        font-size: 13px;
+    }
+
+    /* ===== BADGES — PASTILLES SUR FOND SOMBRE ===== */
+    .badge {
+        display: inline-block;
+        padding: 3px 11px;
+        border-radius: 20px;
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border: 1px solid transparent;
+    }
+
+    .badge-success { background: rgba(124, 152, 133, 0.12); color: var(--sage-light); border-color: rgba(124, 152, 133, 0.35); }
+    .badge-warning { background: rgba(201, 162, 39, 0.12); color: var(--gold-light); border-color: rgba(201, 162, 39, 0.4); }
+    .badge-danger  { background: rgba(192, 108, 77, 0.14); color: var(--rust-light); border-color: rgba(192, 108, 77, 0.4); }
+    .badge-info    { background: rgba(91, 140, 149, 0.14); color: var(--teal-light); border-color: rgba(91, 140, 149, 0.4); }
+    .badge-primary { background: rgba(91, 140, 149, 0.14); color: var(--teal-light); border-color: rgba(91, 140, 149, 0.4); }
+    .badge-secondary { background: rgba(255, 255, 255, 0.04); color: var(--muted); border-color: var(--hairline); }
+
+    /* ===== ÉTIQUETTES PAR TYPE ===== */
+    .sub-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .sub-stat-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--hairline-soft);
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 11.5px;
+        color: var(--ivory-dim);
+    }
+
+    .sub-stat-item strong {
+        color: var(--gold-light);
+        font-weight: 600;
+    }
+
+    /* ===== BARRES DE GRAPHIQUE ===== */
+    .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        height: 90px;
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 5px;
+    }
+
+    .chart-bar {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chart-bar .bar {
+        width: 100%;
+        max-width: 22px;
+        background: linear-gradient(180deg, var(--gold-light), var(--sage));
+        border-radius: 3px 3px 0 0;
+        min-height: 4px;
+        transition: height 0.3s;
+        box-shadow: 0 0 10px -2px rgba(201, 162, 39, 0.35);
+    }
+
+    .chart-bar .bar-value {
+        font-family: 'Fraunces', serif;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--gold-light);
+        margin-bottom: 3px;
+    }
+
+    .chart-bar .bar-label {
+        font-size: 9px;
+        color: var(--muted);
+        margin-top: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .chart-legend {
+        font-size: 11px;
+        color: var(--ivory-dim);
+        text-align: center;
+        margin-top: 12px;
+    }
+
+    .chart-legend strong {
+        color: var(--gold-light);
+        font-weight: 600;
+    }
+
+    /* ===== LISTES ===== */
+    .stats-panel ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .stats-panel ul li {
+        padding: 9px 0;
+        border-bottom: 1px solid var(--hairline-soft);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12.5px;
+        color: var(--ivory);
+    }
+
+    .stats-panel ul li:last-child {
+        border-bottom: none;
+    }
+
+    .stats-panel ul li .item-title {
+        max-width: 70%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--ivory-dim);
+    }
+
+    /* ===== ÉTAT VIDE ===== */
+    .empty-state {
+        color: var(--muted);
+        font-style: italic;
+        text-align: center;
+        padding: 16px 0;
+        font-size: 12.5px;
+    }
+
+    /* ===== LIEN RETOUR ===== */
+    .back-link {
+        display: inline-block;
+        margin-top: 22px;
+        padding: 8px 18px;
+        color: var(--gold-light);
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        border: 1px solid var(--hairline);
+        border-radius: 3px;
+        background: var(--panel);
+        transition: background 0.2s, border-color 0.2s;
+    }
+
+    .back-link:hover {
+        background: var(--panel-2);
+        border-color: rgba(201, 162, 39, 0.4);
+        text-decoration: none;
+    }
+
+    .back-link::before {
+        content: "← ";
+    }
+
+    /* ===== SÉPARATEUR ===== */
+    hr {
+        border: none;
+        border-top: 1px solid var(--hairline-soft);
+        margin: 14px 0;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .stats-row,
+        .stats-three-col {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stats-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .export-section {
+            justify-content: flex-start;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .stats-card .number {
+            font-size: 24px;
+        }
+
+        .export-section .export-label {
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .export-btn {
+            font-size: 11px;
+            padding: 6px 12px;
+        }
+    }
+</style>
+
+<div class="stats-container">
+    <!-- Header -->
+    <div class="stats-header">
+        <h1>📊 Statistiques</h1>
+        <span class="subtitle">Vue d'ensemble du Jardin Botanique</span>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- BOUTONS D'EXPORTATION -->
+    <!-- ============================================ -->
+    <div class="export-section">
+        <span class="export-label">📤 Exporter :</span>
+        <a href="?export=excel" class="export-btn excel">📊 Excel</a>
+        <a href="?export=csv" class="export-btn csv">📊 CSV</a>
+        <a href="?export=pdf" class="export-btn pdf">📊 PDF</a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- CARTES STATISTIQUES -->
+    <!-- ============================================ -->
+    <div class="stats-grid">
+        <div class="stats-card">
+            <span class="icon">🌿</span>
+            <div class="number">{{ total_plantes }}</div>
+            <div class="label">Plantes actives</div>
+        </div>
+        <div class="stats-card">
+            <span class="icon">🗺️</span>
+            <div class="number">{{ total_circuits }}</div>
+            <div class="label">Circuits actifs</div>
+        </div>
+        <div class="stats-card">
+            <span class="icon">📝</span>
+            <div class="number">{{ total_articles }}</div>
+            <div class="label">Articles publiés</div>
+        </div>
+        <div class="stats-card">
+            <span class="icon">👤</span>
+            <div class="number">{{ total_abonnes }}</div>
+            <div class="label">Abonnés actifs</div>
+        </div>
+        <div class="stats-card">
+            <span class="icon">📅</span>
+            <div class="number">{{ total_reservations }}</div>
+            <div class="label">Réservations totales</div>
+        </div>
+        <div class="stats-card">
+            <span class="icon">🆕</span>
+            <div class="number">{{ nouvelles_reservations }}</div>
+            <div class="label">Réservations (7j)</div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- RÉSERVATIONS -->
+    <!-- ============================================ -->
+    <div class="stats-row">
+        <div class="stats-panel">
+            <h3><span class="panel-icon">📊</span> Réservations par statut</h3>
+            <div class="stat-row-item">
+                <span class="stat-label">En attente</span>
+                <span class="badge badge-warning">{{ reservations_attente }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Confirmées</span>
+                <span class="badge badge-success">{{ reservations_confirmees }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Annulées</span>
+                <span class="badge badge-danger">{{ reservations_annulees }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Terminées</span>
+                <span class="badge badge-info">{{ reservations_terminees }}</span>
+            </div>
+            {% if reservations_par_type %}
+            <hr>
+            <div style="margin-top: 8px;">
+                <strong style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);">Par type :</strong>
+                <div class="sub-stats">
+                {% for type, count in reservations_par_type.items %}
+                    <span class="sub-stat-item"><strong>{{ count }}</strong> {{ type|upper }}</span>
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="stats-panel">
+            <h3><span class="panel-icon">📈</span> Évolution (7 derniers jours)</h3>
+            <div class="chart-bars">
+                {% for item in reservations_jour %}
+                <div class="chart-bar">
+                    <div class="bar-value">{{ item.count }}</div>
+                    <div class="bar" style="height: {% if item.count > 0 %}{{ item.count|add:5 }}px{% else %}4px{% endif %};"></div>
+                    <div class="bar-label">{{ item.date }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="chart-legend">
+                Total : <strong>{{ nouvelles_reservations }}</strong> réservations cette semaine
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ARTICLES + DERNIÈRES RÉSERVATIONS + ABONNÉS -->
+    <!-- ============================================ -->
+    <div class="stats-three-col">
+        <div class="stats-panel">
+            <h3><span class="panel-icon">🔥</span> Articles les plus vus</h3>
+            {% if articles_populaires %}
+            <ul>
+                {% for article in articles_populaires %}
+                <li>
+                    <span class="item-title">{{ article.titre|truncatechars:25 }}</span>
+                    <span class="badge badge-primary">{{ article.vues }} 👁️</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="empty-state">Aucun article publié</p>
+            {% endif %}
+        </div>
+
+        <div class="stats-panel">
+            <h3><span class="panel-icon">🕐</span> Dernières réservations</h3>
+            {% if dernieres_reservations %}
+            <ul>
+                {% for res in dernieres_reservations %}
+                <li>
+                    <span>
+                        <strong>{{ res.nom|truncatechars:15 }}</strong>
+                        <span style="font-size:11px;color:var(--muted);display:block;">{{ res.reference }}</span>
+                    </span>
+                    <span class="badge {% if res.statut == 'confirmee' %}badge-success{% elif res.statut == 'en_attente' %}badge-warning{% elif res.statut == 'annulee' %}badge-danger{% else %}badge-info{% endif %}">
+                        {{ res.get_statut_display }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="empty-state">Aucune réservation</p>
+            {% endif %}
+        </div>
+
+        <div class="stats-panel">
+            <h3><span class="panel-icon">👤</span> Abonnés</h3>
+            <div class="stat-row-item">
+                <span class="stat-label">Total actifs</span>
+                <span class="badge badge-success">{{ total_abonnes }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Nouveaux cette semaine</span>
+                <span class="badge badge-info">{{ nouveaux_abonnes }}</span>
+            </div>
+            <hr>
+            <div style="margin-top: 8px; font-size: 11px; color: var(--muted); text-align: center; text-transform: uppercase; letter-spacing: 0.08em;">
+                📧 Newsletter active
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- DÉTAIL DES PLANTES + RÉSUMÉ -->
+    <!-- ============================================ -->
+    <div class="stats-row">
+        <div class="stats-panel">
+            <h3><span class="panel-icon">🌿</span> Détail des plantes</h3>
+            <div class="stat-row-item">
+                <span class="stat-label">Total plantes</span>
+                <span class="badge badge-success">{{ total_plantes }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Avec image</span>
+                <span class="badge badge-info">{{ plantes_avec_image }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Avec QR Code</span>
+                <span class="badge badge-primary">{{ plantes_avec_qr }}</span>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <h3><span class="panel-icon">📊</span> Résumé général</h3>
+            <div class="stat-row-item">
+                <span class="stat-label">Réservations totales</span>
+                <span class="badge badge-success">{{ total_reservations }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Articles publiés</span>
+                <span class="badge badge-info">{{ total_articles }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Circuits actifs</span>
+                <span class="badge badge-primary">{{ total_circuits }}</span>
+            </div>
+            <div class="stat-row-item">
+                <span class="stat-label">Abonnés actifs</span>
+                <span class="badge badge-success">{{ total_abonnes }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retour -->
+    <a href="{% url 'admin:index' %}" class="back-link">Retour au tableau de bord</a>
+</div>
+{% endblock %}

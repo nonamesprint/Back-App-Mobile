@@ -1,0 +1,25 @@
+Bonjour {{ reservation.nom }},
+
+✅ Votre réservation au Jardin Botanique a été confirmée !
+
+📋 Détails de votre réservation :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Référence : {{ reservation.reference }}
+📅 Date : {{ reservation.date_visite|date:"d/m/Y" }}
+⏰ Horaire : {{ reservation.duree_estimee|default:reservation.heure_visite|time:"H:i" }}
+👥 Nombre de personnes : {{ reservation.nombre_personnes }}
+🏷️ Type de visite : {{ reservation.get_type_visite_display }}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 Informations pratiques :
+• Veuillez arriver 15 minutes avant l'heure prévue
+• Présentez votre référence à l'accueil
+• En cas de retard, merci de nous contacter
+
+📞 Contact : +243 123 456 789
+📧 Email : contact@jardinbotanique.cd
+
+Nous avons hâte de vous accueillir au Jardin Botanique ! 🌿
+
+--
+L'équipe du Jardin Botanique

@@ -1,0 +1,31 @@
+
+📝 Nouvel article : {{ article.titre }}
+
+Bonjour cher abonné,
+
+Un nouvel article vient d'être publié sur le blog du Jardin Botanique !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 {{ article.titre }}
+✍️ Par {{ article.auteur }}
+📅 {{ article.date_publication|date:"d/m/Y à H:i" }}
+🏷️ {{ article.get_categorie_display }}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{ article.extrait }}
+
+📖 Lire l'article complet :
+{{ site_url }}/article/{{ article.slug }}/
+
+🌿 Découvrez aussi notre collection de plantes :
+{{ site_url }}/api/plantes/
+
+📱 Scannez nos QR Codes pour en savoir plus sur les plantes du jardin.
+
+À bientôt au Jardin Botanique ! 🌿
+
+--
+L'équipe du Jardin Botanique
+Site : {{ site_url }}
+Email : contact@jardinbotanique.cd
+Tél : +243 123 456 789

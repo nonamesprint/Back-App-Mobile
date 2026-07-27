@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ plante.nom_commun_fr }} - Jardin Botanique</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* ===== CARTE PRINCIPALE ===== */
+        .card {
+            max-width: 900px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(46, 125, 50, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 80px rgba(46, 125, 50, 0.20);
+        }
+        
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);
+            padding: 40px 40px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        
+        .header::after {
+            content: '🌿';
+            position: absolute;
+            bottom: -20px;
+            right: 20px;
+            font-size: 120px;
+            opacity: 0.10;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .scientifique {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.80);
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ===== CONTENU ===== */
+        .content {
+            padding: 35px 40px 40px;
+        }
+        
+        /* ===== IMAGE ===== */
+        .image-wrapper {
+            margin: -20px 0 30px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+            background: #f5f7f5;
+        }
+        
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+            max-height: 450px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .image-wrapper:hover img {
+            transform: scale(1.02);
+        }
+        
+        /* ===== BADGES ===== */
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            background: #f0f4f0;
+            color: #2E7D32;
+        }
+        
+        .badge .icon {
+            font-size: 16px;
+        }
+        
+        .badge.famille {
+            background: #E8F5E9;
+            color: #1B5E20;
+        }
+        
+        .badge.zone {
+            background: #E3F2FD;
+            color: #0D47A1;
+        }
+        
+        /* ===== SECTIONS ===== */
+        .section {
+            margin-bottom: 28px;
+        }
+        
+        .section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1B5E20;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title .emoji {
+            font-size: 24px;
+        }
+        
+        .section-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #3d3d3d;
+            background: #fafcfa;
+            padding: 20px 24px;
+            border-radius: 16px;
+            border-left: 4px solid #2E7D32;
+        }
+        
+        /* ===== ANECDOTE ===== */
+        .anecdote-box {
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            padding: 24px 28px;
+            border-radius: 16px;
+            border-left: 4px solid #FF9800;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .anecdote-box::before {
+            content: '💡';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            font-size: 60px;
+            opacity: 0.10;
+        }
+        
+        .anecdote-box p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4E342E;
+            font-style: italic;
+        }
+        
+        /* ===== QR CODE ===== */
+        .qr-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px dashed #e8ece8;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .qr-section .qr-code {
+            width: 120px;
+            height: 120px;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            flex-shrink: 0;
+        }
+        
+        .qr-section .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .qr-section .qr-info {
+            flex: 1;
+        }
+        
+        .qr-section .qr-info p {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+        }
+        
+        .qr-section .qr-info .qr-label {
+            font-weight: 600;
+            color: #2E7D32;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .qr-section .qr-info .qr-url {
+            font-size: 12px;
+            color: #999;
+            word-break: break-all;
+            background: #f5f7f5;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e8ece8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #aaa;
+        }
+        
+        .footer .brand {
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        
+        .footer .brand span {
+            color: #1B5E20;
+        }
+        
+        .footer .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #2E7D32;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: #f0f4f0;
+            transition: background 0.3s ease;
+        }
+        
+        .footer .back-link:hover {
+            background: #e0e8e0;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 30px 24px 24px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .header .scientifique {
+                font-size: 18px;
+            }
+            
+            .content {
+                padding: 24px 20px 28px;
+            }
+            
+            .badges {
+                gap: 8px;
+            }
+            
+            .badge {
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .section-text {
+                padding: 16px 18px;
+                font-size: 15px;
+            }
+            
+            .qr-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .qr-section .qr-code {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header .scientifique {
+                font-size: 16px;
+            }
+            
+            .section-text {
+                font-size: 14px;
+                padding: 14px 16px;
+            }
+            
+            .anecdote-box {
+                padding: 18px 20px;
+            }
+            
+            .anecdote-box p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <span class="header-badge">🌱 Jardin Botanique</span>
+            <h1>{{ plante.nom_commun_fr }}</h1>
+            <p class="scientifique">{{ plante.nom_scientifique }}</p>
+        </div>
+        
+        <!-- ===== CONTENU ===== -->
+        <div class="content">
+            <!-- Image -->
+            {% if plante.image_principale %}
+            <div class="image-wrapper">
+                <img src="{{ plante.image_principale.url }}" alt="{{ plante.nom_commun_fr }}">
+            </div>
+            {% endif %}
+            
+            <!-- Badges -->
+            <div class="badges">
+                <span class="badge famille">
+                    <span class="icon">🌸</span>
+                    {{ plante.famille_botanique }}
+                </span>
+                {% if plante.zone_geographique %}
+                <span class="badge zone">
+                    <span class="icon">📍</span>
+                    {{ plante.zone_geographique }}
+                </span>
+                {% endif %}
+            </div>
+            
+            <!-- Description -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">📖</span> Description
+                </div>
+                <div class="section-text">
+                    {{ plante.description }}
+                </div>
+            </div>
+            
+            <!-- Anecdote -->
+            {% if plante.anecdote %}
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">💡</span> Anecdote
+                </div>
+                <div class="anecdote-box">
+                    <p>{{ plante.anecdote }}</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- QR Code -->
+            <div class="qr-section">
+                <div class="qr-code">
+                    {% if plante.qr_code %}
+                    <img src="{{ plante.qr_code.url }}" alt="QR Code">
+                    {% else %}
+                    <div style="width:100%;height:100%;background:#f0f4f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;">QR Code</div>
+                    {% endif %}
+                </div>
+                <div class="qr-info">
+                    <span class="qr-label">📱 Scanner pour en savoir plus</span>
+                    <p>Utilisez l'application mobile pour scanner ce QR Code et accéder à toutes les informations de la plante.</p>
+                    <div class="qr-url">{{ plante.qr_code_url }}</div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer">
+                <span class="brand">🌿 <span>Jardin Botanique</span></span>
+                <span>Mise à jour le {{ plante.date_creation|date:"d/m/Y" }}</span>
+                <a href="#" class="back-link">← Retour</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

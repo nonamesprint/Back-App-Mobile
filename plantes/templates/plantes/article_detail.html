@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.titre }} - Jardin Botanique</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* ===== CARTE PRINCIPALE ===== */
+        .card {
+            max-width: 860px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(46, 125, 50, 0.12);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 80px rgba(46, 125, 50, 0.18);
+        }
+        
+        /* ===== EN-TÊTE ===== */
+        .header {
+            background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #388E3C 100%);
+            padding: 50px 45px 35px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+        }
+        
+        .header::after {
+            content: '🌿';
+            position: absolute;
+            bottom: -30px;
+            right: 10px;
+            font-size: 140px;
+            opacity: 0.06;
+        }
+        
+        .header-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: 0.3px;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 40px;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1.15;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 30px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.80);
+            position: relative;
+            z-index: 1;
+            align-items: center;
+        }
+        
+        .header .meta .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .header .meta .meta-item .icon {
+            font-size: 16px;
+        }
+        
+        /* ===== CONTENU ===== */
+        .content {
+            padding: 45px 45px 40px;
+        }
+        
+        /* ===== IMAGE ===== */
+        .image-wrapper {
+            margin: -10px 0 30px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            background: #f5f7f5;
+        }
+        
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+            max-height: 420px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+        }
+        
+        .image-wrapper:hover img {
+            transform: scale(1.03);
+        }
+        
+        /* ===== TEXTE ===== */
+        .article-content {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #2d2d2d;
+        }
+        
+        .article-content p {
+            margin-bottom: 18px;
+        }
+        
+        .article-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .article-content .highlight {
+            background: #f8fbf8;
+            padding: 24px 28px;
+            border-radius: 16px;
+            border-left: 4px solid #2E7D32;
+            margin: 24px 0;
+            font-style: italic;
+            color: #3d3d3d;
+        }
+        
+        /* ===== TAGS ===== */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 28px 0 0;
+            padding-top: 28px;
+            border-top: 2px dashed #e8ece8;
+        }
+        
+        .tags .tag {
+            background: #f0f4f0;
+            color: #2E7D32;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        
+        .tags .tag:hover {
+            background: #e0e8e0;
+        }
+        
+        /* ===== PARTAGE ===== */
+        .share-section {
+            margin-top: 30px;
+            padding-top: 28px;
+            border-top: 1px solid #e8ece8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .share-section .share-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .share-section .share-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .share-section .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .share-section .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .share-btn.twitter {
+            background: #1DA1F2;
+        }
+        
+        .share-btn.facebook {
+            background: #1877F2;
+        }
+        
+        .share-btn.whatsapp {
+            background: #25D366;
+        }
+        
+        .share-btn.email {
+            background: #666;
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid #e8ece8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 13px;
+            color: #aaa;
+        }
+        
+        .footer .brand {
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        
+        .footer .brand span {
+            color: #1B5E20;
+        }
+        
+        .footer .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #2E7D32;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 6px 18px;
+            border-radius: 30px;
+            background: #f0f4f0;
+            transition: background 0.3s ease;
+        }
+        
+        .footer .back-link:hover {
+            background: #e0e8e0;
+        }
+        
+        .footer .stats {
+            display: flex;
+            gap: 16px;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        .footer .stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            
+            .header {
+                padding: 32px 24px 24px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .header .meta {
+                font-size: 13px;
+                gap: 12px;
+            }
+            
+            .content {
+                padding: 24px 20px 28px;
+            }
+            
+            .article-content {
+                font-size: 15px;
+                line-height: 1.8;
+            }
+            
+            .share-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .share-section .share-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .share-section .share-btn {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .header .meta {
+                font-size: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            
+            .article-content {
+                font-size: 14px;
+            }
+            
+            .tags .tag {
+                font-size: 12px;
+                padding: 3px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <span class="header-badge">{{ article.get_categorie_display }}</span>
+            <h1>{{ article.titre }}</h1>
+            <div class="meta">
+                <span class="meta-item">
+                    <span class="icon">✍️</span>
+                    {{ article.auteur }}
+                </span>
+                <span class="meta-item">
+                    <span class="icon">📅</span>
+                    {{ article.date_publication|date:"d/m/Y" }}
+                </span>
+                <span class="meta-item">
+                    <span class="icon">⏱️</span>
+                    {{ article.date_publication|time:"H:i" }}
+                </span>
+                <span class="meta-item">
+                    <span class="icon">👁️</span>
+                    {{ article.vues }} vues
+                </span>
+            </div>
+        </div>
+        
+        <!-- ===== CONTENU ===== -->
+        <div class="content">
+            <!-- Image -->
+            {% if article.image_principale %}
+            <div class="image-wrapper">
+                <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}">
+            </div>
+            {% endif %}
+            
+            <!-- Texte -->
+            <div class="article-content">
+                {{ article.contenu|linebreaks }}
+            </div>
+            
+            <!-- Tags -->
+            {% if article.tags %}
+            <div class="tags">
+                {% for tag in article.tags_list %}
+                    <span class="tag">#{{ tag }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- Partage -->
+            <div class="share-section">
+                <span class="share-title">📤 Partager cet article</span>
+                <div class="share-buttons">
+                    <a href="https://twitter.com/intent/tweet?text={{ article.titre|urlencode }}&url=https://mon-jardin-botanique.com/article/{{ article.slug }}/" 
+                       target="_blank" class="share-btn twitter">
+                        🐦 Twitter
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://mon-jardin-botanique.com/article/{{ article.slug }}/" 
+                       target="_blank" class="share-btn facebook">
+                        📘 Facebook
+                    </a>
+                    <a href="https://wa.me/?text={{ article.titre|urlencode }}%20https://mon-jardin-botanique.com/article/{{ article.slug }}/" 
+                       target="_blank" class="share-btn whatsapp">
+                        💬 WhatsApp
+                    </a>
+                    {% comment %} <a href="mailto:?subject={{ article.titre|urlencode }}&body=https://mon-jardin-botanique.com/article/{{ article.slug }}/" 
+                       class="share-btn email">
+                        ✉️ Email
+                    </a> {% endcomment %}
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer">
+                <span class="brand">🌿 <span>Jardin Botanique</span></span>
+                <div class="stats">
+                    <span>📝 {{ article.date_creation|date:"d/m/Y" }}</span>
+                    <span>👁️ {{ article.vues }} vues</span>
+                </div>
+                <a href="#" class="back-link">← Retour</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
