@@ -16,7 +16,7 @@ def envoyer_rappels_reservations_task():
     # ✅ Récupérer les réservations non rappelées
     reservations = Reservation.objects.filter(
         rappel_envoye=False,
-        statut__in=['confirmée', 'en_attente']
+        statut__in=['confirmée']
     )
     
     rappels_a_envoyer = []
@@ -55,3 +55,28 @@ def envoyer_rappels_reservations_task():
         print(f"✅ Rappel envoyé pour la réservation #{reservation.id}")
     
     return f"{len(rappels_a_envoyer)} rappel(s) envoyés"
+
+
+@shared_task
+def test_envoyer_rappel_immmediat(reservation_id):
+    """Test : envoie un rappel immédiat pour une réservation spécifique."""
+    from .models import Reservation
+    from plantes.notif_services import send_push_notification_to_all_users
+    
+    try:
+        reservation = Reservation.objects.get(id=reservation_id)
+        
+        send_push_notification_to_all_users(
+            title=f"🌿 TEST - Rappel de visite",
+            body=f"Test immédiat pour {reservation.nom} - {reservation.date_visite} à {reservation.heure_visite}",
+            data={
+                "screen": "Reservations",
+                "reservation_id": reservation.id,
+                "type": "test"
+            }
+        )
+        
+        print(f"✅ Test envoyé pour la réservation #{reservation.id}")
+        return f"Test envoyé pour #{reservation.id}"
+    except Reservation.DoesNotExist:
+        return "Réservation non trouvée"
