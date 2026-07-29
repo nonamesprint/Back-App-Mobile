@@ -4,7 +4,22 @@ from django.conf import settings
 from django.conf.urls.static import static
 from plantes.views import *
 
+from django.http import JsonResponse
+from django.shortcuts import redirect
+
+def home_view(request):
+    return JsonResponse({
+        "message": "Bienvenue sur l'API du Jardin Botanique !",
+        "endpoints": {
+            "admin": "/admin",
+            "api_plantes": "/api/plantes/",
+            
+        }
+    })
+
+
 urlpatterns = [
+    path('', home_view),  
     path("admin/", admin.site.urls),
     path('api/', include('plantes.urls')),
     path('api/', include('reservations.urls')),
