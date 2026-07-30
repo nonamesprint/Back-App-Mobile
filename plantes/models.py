@@ -3,6 +3,8 @@ from django.core.files import File
 from django.db import models
 from django.utils.text import slugify
 import qrcode
+from django.conf import settings
+
 
 class Plante(models.Model):
     # Informations de base
@@ -43,7 +45,9 @@ class Plante(models.Model):
         """Génère le QR code et sauvegarde dans le champ qr_code"""
         try:
             # Générer l'URL unique pour la plante
-            base_url = "http://192.168.43.171:8000/plante/"
+            # base_url = "http://192.168.43.171:8000/plante/"
+            
+            base_url = settings.BASE_URL.rstrip('/')
             url = f"{base_url}{self.slug}"
             self.qr_code_url = url
             
