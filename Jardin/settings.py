@@ -266,6 +266,26 @@ if env_file.exists():
 else:
     load_dotenv()  # Fallback
     print(f"⚠️  Fichier {env_file.name} non trouvé, utilisation des variables système")
+    
+
+# Dans settings.py
+import os
+
+# Déterminer l'environnement
+ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
+
+# Configuration des URLs
+if ENVIRONMENT == 'production':
+    # Production - Render
+    BASE_URL = os.getenv('BASE_URL', 'https://back-app-mobile.onrender.com')
+    API_URL = os.getenv('API_URL', 'https://back-app-mobile.onrender.com')
+else:
+    # Développement local
+    BASE_URL = 'http://localhost:8000'
+    API_URL = 'http://localhost:8000'
+
+# Dans les variables d'environnement Render
+# BASE_URL=https://back-app-mobile.onrender.com
 
 # ============================================
 # SÉCURITÉ - PRODUCTION

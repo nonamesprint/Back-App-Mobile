@@ -42,9 +42,13 @@ class PlanteViewSet(viewsets.ModelViewSet):
         # Générer l'URL unique pour la plante
         # Idéalement, l'URL serait celle de l'app mobile, ex: https://monapp.com/plante/{slug}
         # Pour le développement, nous allons utiliser une URL de test
-        base_url = "http://192.168.43.171:8000/plante/"
-        url = f"{base_url}{plante.slug}"
+        # base_url = "http://192.168.43.171:8000/plante/"
+        # url = f"{base_url}{plante.slug}"
+        # plante.qr_code_url = url
+        base_url = settings.BASE_URL.rstrip('/')
+        url = f"{base_url}/plante/{plante.slug}"
         plante.qr_code_url = url
+
 
         # Générer le QR code
         qr = qrcode.QRCode(
