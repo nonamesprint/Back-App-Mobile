@@ -268,8 +268,6 @@ else:
     print(f"⚠️  Fichier {env_file.name} non trouvé, utilisation des variables système")
     
 
-# Dans settings.py
-import os
 
 # Déterminer l'environnement
 ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
@@ -457,6 +455,7 @@ else:
         "http://localhost:8081",
         "http://127.0.0.1:8081",
         "http://localhost:8000",
+        
     ]
 
 CORS_ALLOW_CREDENTIALS = True

@@ -10,6 +10,7 @@ from datetime import timedelta
 from django.shortcuts import render
 from django.urls import path
 from .export_utils import export_stats_to_csv, export_stats_to_excel, export_stats_to_pdf, export_to_csv, export_to_excel, export_to_pdf
+from django.conf import settings
 
 # ==================== ACTIONS D'EXPORTATION ====================
 
@@ -157,6 +158,21 @@ class PlanteAdmin(admin.ModelAdmin, BotanistePermissionsMixin):
             return mark_safe(f'<img src="{obj.qr_code.url}" width="150" height="150" />')
         return "❌ QR Code non généré"
     qr_code_preview.short_description = "Aperçu QR Code"
+    
+    
+    def qr_code_url_display(self, obj):
+        """Affiche l'URL complète du QR Code"""
+        if obj.qr_code_url:
+            # Utiliser la BASE_URL configurée
+            if settings.ENVIRONMENT == 'production':
+                base_url = settings.BASE_URL
+            else:
+                base_url = 'http://localhost:8000'
+            
+            full_url = f"{base_url}{obj.qr_code.url if obj.qr_code else obj.qr_code_url}"
+            return mark_safe(f'<a href="{full_url}" target="_blank">{full_url[:60]}...</a>')
+        return "❌ Pas d'URL"
+    qr_code_url_display.short_description = "URL QR Code"
 
     def save_model(self, request, obj, form, change):
         """Surcharge pour générer le QR Code à la sauvegarde dans l'admin"""
