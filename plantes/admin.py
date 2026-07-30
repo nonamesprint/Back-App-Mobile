@@ -177,7 +177,7 @@ class PlanteAdmin(admin.ModelAdmin, BotanistePermissionsMixin):
     def save_model(self, request, obj, form, change):
         """Surcharge pour générer le QR Code à la sauvegarde dans l'admin"""
         # Générer le QR Code avant la sauvegarde
-        obj.generate_qr_code()
+        obj.generate_qr_code(force=True)
         # Sauvegarder l'objet
         super().save_model(request, obj, form, change)
         

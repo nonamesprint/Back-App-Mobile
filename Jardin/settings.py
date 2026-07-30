@@ -258,7 +258,7 @@ ENVIRONMENT = os.getenv('DJANGO_ENV', 'development')
 if ENVIRONMENT == 'production':
     env_file = BASE_DIR / '.env.prod'
 else:
-    env_file = BASE_DIR / '.env.dev'
+    env_file = BASE_DIR / '.env'
 
 if env_file.exists():
     load_dotenv(env_file)

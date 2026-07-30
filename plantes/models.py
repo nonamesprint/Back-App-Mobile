@@ -48,7 +48,7 @@ class Plante(models.Model):
             # base_url = "http://192.168.43.171:8000/plante/"
             
             base_url = settings.BASE_URL.rstrip('/')
-            url = f"{base_url}{self.slug}"
+            url = f"{base_url}/plante/{self.slug}"
             self.qr_code_url = url
             
             # Générer l'image QR
