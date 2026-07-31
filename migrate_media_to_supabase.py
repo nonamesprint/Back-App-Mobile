@@ -60,7 +60,7 @@ def migrate_plante_media(plante, stats):
     
     # 3. Mettre à jour l'URL du QR code
     if plante.slug:
-        base_url = getattr(settings, 'FRONTEND_URL', settings.BASE_URL)
+        base_url = getattr(settings, 'BASE_URL', settings.BASE_URL)
         new_url = f"{base_url.rstrip('/')}/plante/{plante.slug}"
         if plante.qr_code_url != new_url:
             plante.qr_code_url = new_url
